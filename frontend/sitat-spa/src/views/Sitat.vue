@@ -12,11 +12,7 @@
            box
            required
          ></v-text-field>
-         <v-btn
-           @click="submit"
-         >
-           submit
-         </v-btn>
+
        </v-form>
     </v-container>
     <v-container grid-list-sm fill-height>
@@ -24,11 +20,21 @@
         <v-flex xs12 v-for="i in data" >
           <v-card :key="i.id">
             <v-card-title primary-title class="headline">
-              {{ i.id }}
+              <v-layout row wrap justify-space-between>
+                <span>{{ i.id }}</span>
+                <v-btn color="transparent" flat @click="delItem(i.id)">
+                  <v-icon >close</v-icon>
+                </v-btn>
+              </v-layout>
             </v-card-title>
-            <p>Sitat: <span class="subheading">{{ i.sitat }}</span></p>
-            <p>Dato: <span>{{ i.date }}</span></p>
-            <v-btn color="primary" @click="delItem(i.id)">Delete</v-btn>
+            <v-card-text>
+              <v-container>
+                <v-layout column wrap justify-start align-start>
+                    <p>Sitat: <span class="subheading">{{ i.sitat }}</span></p>
+                    <p>Dato: <span>{{ i.date.date() }}/{{ i.date.month()+1 }}/{{ i.date.year() }}</span></p>
+                </v-layout>
+              </v-container>
+            </v-card-text>
           </v-card>
         </v-flex>
       </v-layout>
