@@ -1,44 +1,80 @@
 <template lang="html">
   <section>
-    <div class="">
-      <h1>Helvete</h1>
+    <v-container grid-list-sm xs12 sm8 md6 lg6 xl6>
+        <v-container class="elevation-4">
+          <v-form ref="form" @submit="submit">
+            <h1 class="headline">Legg til sitat</h1>
+             <v-textarea
+               name="input-7-1"
+               v-model="sitat"
+               label="Sitat"
+               hint="Skriv inn sitatet her"
+               required
+            ></v-textarea>
+             <v-select
+               ripple
 
-    </div>
-    <v-container>
-      <v-form ref="form" @submit="submit">
-         <v-text-field
-           v-model="sitat"
-           label="Sitat"
-           box
-           required
-         ></v-text-field>
+               :items="humoer"
+               item-text="navn"
+               item-value="id"
+               label="Velg humør"
+               v-model="humoer_id"
+             ></v-select>
 
-       </v-form>
+               <v-checkbox
+                ripple
+                 :disabled="!navigatorGeolocation"
+                 label="Legg til plassering"
+                 v-model="lokaliser"
+                @change="geolokaliser"
+               >
+             </v-checkbox>
+
+             <v-btn color="primary" @click="submit">send inn</v-btn>
+           </v-form>
+        </v-container>
+        <v-divider></v-divider>
+        <v-container grid-list-sm fill-height class="blue lighten-4 elevation-4" xs12>
+          <v-layout row wrap reverse>
+            <v-flex xs12>
+              <span class="display-1">Sitater</span>
+            </v-flex>
+            <v-flex xs12 v-for="i in data" >
+              <v-card :key="i.id">
+                <v-card-title primary-title class="subheading">
+                  <v-layout row wrap align>
+                    <v-flex>
+                      <v-avatar
+                        size="50"
+                      >
+                      <img
+                        :src= "require('@/assets/' + i.humoer + '.png')"
+                        alt="alt">
+                      </v-avatar>
+                      <small class="headline grey--text lighten-3"> Vinjar  </small>
+                    </v-flex>
+                      <v-btn color="transparent" flat @click="delItem(i.id)" right>
+                        <v-icon color="grey">close</v-icon>
+                      </v-btn>
+                  </v-layout>
+                </v-card-title>
+                <span>{{ i.date.date() }}/{{ i.date.month()+1 }}/{{ i.date.year() }}</span>
+                <v-card-text>
+                  <v-container>
+                    <v-layout column wrap justify-start align-center>
+                      <blockquote class="title">
+                          &#8220;<span >{{ i.sitat }}</span>&#8221;
+                        </blockquote>
+
+                    </v-layout>
+                  </v-container>
+                </v-card-text>
+              </v-card>
+            </v-flex>
+          </v-layout>
+        </v-container>
     </v-container>
-    <v-container grid-list-sm fill-height>
-      <v-layout row wrap reverse>
-        <v-flex xs12 v-for="i in data" >
-          <v-card :key="i.id">
-            <v-card-title primary-title class="headline">
-              <v-layout row wrap justify-space-between>
-                <span>{{ i.id }}</span>
-                <v-btn color="transparent" flat @click="delItem(i.id)">
-                  <v-icon >close</v-icon>
-                </v-btn>
-              </v-layout>
-            </v-card-title>
-            <v-card-text>
-              <v-container>
-                <v-layout column wrap justify-start align-start>
-                    <p>Sitat: <span class="subheading">{{ i.sitat }}</span></p>
-                    <p>Dato: <span>{{ i.date.date() }}/{{ i.date.month()+1 }}/{{ i.date.year() }}</span></p>
-                </v-layout>
-              </v-container>
-            </v-card-text>
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </v-container>
+
   </section>
 
 </template>
@@ -52,16 +88,23 @@ export default {
   data() {
     return {
       data:null,
-      sitat: ''
+      sitat: '',
+      humoer_id: null,
+      barn_id: 1,
+      humoer: null,
+      lokaliser: false,
+      navigatorGeolocation: null
     }
+  },
+  computed: {
   },
   methods: {
     submit () {
           // Native form submission is not yet supported
           axios.post('http://127.0.0.1:5000/api/sitat', {
             "sitat": this.sitat,
-            "barn_id": 1,
-            "humoer_id": 0
+            "barn_id": this.barn_id,
+            "humoer_id": this.humoer_id
           })
           .then((response) => {
             console.log(response)
@@ -93,17 +136,44 @@ export default {
       hentData() {
         axios.get('http://127.0.0.1:5000/api/sitat')
         .then((response) => {
-        this.data = response.data.data.map((item) => {
+          console.log(response)
+          this.data = response.data.data.map((item) => {
           console.log(moment(item.creation_date));
-          return {sitat: item.sitat, id: item.id, date: moment(item.creation_date)}
+          return {sitat: item.sitat, id: item.id, date: moment(item.creation_date), barn: item.barn_id, humoer: item.humoer_id}
         })
       })
         .catch(error => (console.log(error, "hentdata")))
+      },
+    hentPosisjon(options) {
+      return new Promise(function (resolve, reject) {
+        navigator.geolocation.getCurrentPosition(resolve, reject, options);
+      });
+    },
+    geolokaliser() {
+      const options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
       }
+      this.hentPosisjon(options)
+      .then((response) => {
+          console.log(response);
+      })
+
+    }
 
     },
-  mounted(){
+    created(){
     this.hentData()
+    axios.get('http://127.0.0.1:5000/api/humoer')
+    .then((response) => {
+      this.humoer = response.data.data
+    })
+    if (navigator.geolocation) {
+      this.navigatorGeolocation = true
+    } else {
+      this.navigatorGeolocation = false
+    }
   }
 }
 </script>

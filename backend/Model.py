@@ -11,13 +11,14 @@ class Sitat(db.Model):
     __tablename__ = 'sitat'
     id = db.Column(db.Integer, primary_key=True)
     sitat = db.Column(db.String(250), nullable=False)
+    info = db.Column(db.String(250), nullable=True)
     creation_date = db.Column(db.DateTime, default=datetime.datetime.utcnow, nullable=True)
-    # barn_id = db.Column(db.Integer, db.ForeignKey('barn.id', ondelete='CASCADE'), nullable=False)
     barn_id = db.Column(db.Integer, db.ForeignKey('barn.id', ondelete='CASCADE'), nullable=False)
-    # barn = db.relationship('Barn', backref=db.backref('sitater', lazy='dynamic' ))
-    # humoer_id = db.Column(db.Integer, db.ForeignKey('humoer.id', ondelete='CASCADE'), nullable=False)
+    barn_id = db.Column(db.Integer, db.ForeignKey('barn.id', ondelete='CASCADE'), nullable=False)
+    barn = db.relationship('Barn', backref=db.backref('sitater', lazy='dynamic' ))
     humoer_id = db.Column(db.Integer, db.ForeignKey('humoer.id', ondelete='CASCADE'), nullable=False)
-    # humoer = db.relationship('Humoer', backref=db.backref('sitater', lazy='dynamic' ))
+    humoer_id = db.Column(db.Integer, db.ForeignKey('humoer.id', ondelete='CASCADE'), nullable=False)
+    humoer = db.relationship('Humoer', backref=db.backref('sitater', lazy='dynamic' ))
 
     def __init__(self, sitat, barn_id, humoer_id):
         self.sitat = sitat

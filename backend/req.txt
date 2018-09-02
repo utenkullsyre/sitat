@@ -4,6 +4,7 @@ flask_marshmallow
 flask_restful
 flask_script
 flask_migrate
+flask_cors
 psycopg2
 marshmallow_sqlalchemy
 requests
