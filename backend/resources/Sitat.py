@@ -26,7 +26,7 @@ class SitatResource(Resource):
         if sitat:
             return {'message': 'Sitat eksisterer allerede'}, 400
 
-        sitat = Sitat(data['sitat'], int(data['barn_id']), int(data['humoer_id']))
+        sitat = Sitat(data['sitat'], int(data['barn_id']), int(data['humoer_id']), data['info'])
 
 
         db.session.add(sitat)

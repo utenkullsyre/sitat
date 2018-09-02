@@ -11,6 +11,13 @@
                hint="Skriv inn sitatet her"
                required
             ></v-textarea>
+            <v-textarea
+              name="input-7-1"
+              v-model="beskrivelse"
+              label="Beskrivelse"
+              hint="Skriv inn beskrivelse her"
+              required
+           ></v-textarea>
              <v-select
                ripple
 
@@ -42,33 +49,31 @@
             <v-flex xs12 v-for="i in data" >
               <v-card :key="i.id">
                 <v-card-title primary-title class="subheading">
-                  <v-layout row wrap align>
-                    <v-flex>
+                  <v-layout row wrap justify-space-between >
+                    <div class="">
                       <v-avatar
                         size="50"
                       >
-                      <img
+                      <v-img
                         :src= "require('@/assets/' + i.humoer + '.png')"
-                        alt="alt">
+                        alt="alt" contain></v-img>
                       </v-avatar>
-                      <small class="headline grey--text lighten-3"> Vinjar  </small>
-                    </v-flex>
-                      <v-btn color="transparent" flat @click="delItem(i.id)" right>
+                      <small class="headline grey--text lighten-3"> {{ i.barn == 1 ? 'Vinjar' : i.barn}}  </small>
+                    </div>
+                      <v-btn color="transparent" flat @click="delItem(i.id)">
                         <v-icon color="grey">close</v-icon>
                       </v-btn>
                   </v-layout>
                 </v-card-title>
-                <span>{{ i.date.date() }}/{{ i.date.month()+1 }}/{{ i.date.year() }}</span>
-                <v-card-text>
-                  <v-container>
-                    <v-layout column wrap justify-start align-center>
-                      <blockquote class="title">
+                <v-card-text class="my-4">
+                    <v-layout column wrap justify-start align-start class="mb-4">
+                      <blockquote class="title pb-2">
                           &#8220;<span >{{ i.sitat }}</span>&#8221;
                         </blockquote>
-
+                        <small>{{ i.date.date() }}/{{ i.date.month()+1 }}/{{ i.date.year() }}</small>
                     </v-layout>
-                  </v-container>
                 </v-card-text>
+
               </v-card>
             </v-flex>
           </v-layout>
@@ -89,6 +94,7 @@ export default {
     return {
       data:null,
       sitat: '',
+      beskrivelse: null,
       humoer_id: null,
       barn_id: 1,
       humoer: null,
@@ -104,7 +110,8 @@ export default {
           axios.post('http://127.0.0.1:5000/api/sitat', {
             "sitat": this.sitat,
             "barn_id": this.barn_id,
-            "humoer_id": this.humoer_id
+            "humoer_id": this.humoer_id,
+            "info": this.beskrivelse ? this.beskrivelse : null
           })
           .then((response) => {
             console.log(response)
@@ -139,7 +146,7 @@ export default {
           console.log(response)
           this.data = response.data.data.map((item) => {
           console.log(moment(item.creation_date));
-          return {sitat: item.sitat, id: item.id, date: moment(item.creation_date), barn: item.barn_id, humoer: item.humoer_id}
+          return {sitat: item.sitat, id: item.id, date: moment(item.creation_date), barn: item.barn_id, humoer: item.humoer_id, beskrivelse: item.info ? item.info : null}
         })
       })
         .catch(error => (console.log(error, "hentdata")))

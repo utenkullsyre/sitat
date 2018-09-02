@@ -20,10 +20,11 @@ class Sitat(db.Model):
     humoer_id = db.Column(db.Integer, db.ForeignKey('humoer.id', ondelete='CASCADE'), nullable=False)
     humoer = db.relationship('Humoer', backref=db.backref('sitater', lazy='dynamic' ))
 
-    def __init__(self, sitat, barn_id, humoer_id):
+    def __init__(self, sitat, barn_id, humoer_id, info):
         self.sitat = sitat
         self.barn_id = barn_id
-        self.humoer_id = humoer_id
+        self.humoer_id = humoer_id,
+        self.info = info
 
 class Barn(db.Model):
     __tablename__ = 'barn'
