@@ -42,17 +42,18 @@
         </v-container>
         <v-divider></v-divider>
         <v-container grid-list-sm fill-height class="blue lighten-4 elevation-4" xs12>
-          <v-layout row wrap reverse>
+          <v-layout row wrap>
             <v-flex xs12>
               <span class="display-1">Sitater</span>
             </v-flex>
-            <v-flex xs12 v-for="i in data" >
-              <v-card :key="i.id">
+            <v-flex xs12 md6 xl4 v-for="i in data" fill-height>
+              <v-card :key="i.id" fill-height class="mx-2">
                 <v-card-title primary-title class="subheading">
                   <v-layout row wrap justify-space-between >
                     <div class="">
                       <v-avatar
                         size="50"
+                        color="red lighten-4"
                       >
                       <v-img
                         :src= "require('@/assets/' + i.humoer + '.png')"
@@ -61,13 +62,13 @@
                       <small class="headline grey--text lighten-3"> {{ i.barn == 1 ? 'Vinjar' : i.barn}}  </small>
                     </div>
                       <v-btn color="transparent" flat @click="delItem(i.id)">
-                        <v-icon color="grey">close</v-icon>
+                        <v-icon color="grey" ripple>close</v-icon>
                       </v-btn>
                   </v-layout>
                 </v-card-title>
                 <v-card-text class="my-4">
                     <v-layout column wrap justify-start align-start class="mb-4">
-                      <blockquote class="title pb-2">
+                      <blockquote class="title pb-2 text-xs-left">
                           &#8220;<span >{{ i.sitat }}</span>&#8221;
                         </blockquote>
                         <small>{{ i.date.date() }}/{{ i.date.month()+1 }}/{{ i.date.year() }}</small>
@@ -114,7 +115,7 @@ export default {
             "info": this.beskrivelse ? this.beskrivelse : null
           })
           .then((response) => {
-            console.log(response)
+            console.log(response, "dette er response")
             this.hentData()
             this.clear()
           })

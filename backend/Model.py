@@ -14,16 +14,16 @@ class Sitat(db.Model):
     info = db.Column(db.String(250), nullable=True)
     creation_date = db.Column(db.DateTime, default=datetime.datetime.utcnow, nullable=True)
     barn_id = db.Column(db.Integer, db.ForeignKey('barn.id', ondelete='CASCADE'), nullable=False)
-    barn_id = db.Column(db.Integer, db.ForeignKey('barn.id', ondelete='CASCADE'), nullable=False)
-    barn = db.relationship('Barn', backref=db.backref('sitater', lazy='dynamic' ))
+    # barn_id = db.Column(db.Integer, db.ForeignKey('barn.id', ondelete='CASCADE'), nullable=False)
+    # barn = db.relationship('Barn', backref=db.backref('sitater', lazy='dynamic' ))
     humoer_id = db.Column(db.Integer, db.ForeignKey('humoer.id', ondelete='CASCADE'), nullable=False)
-    humoer_id = db.Column(db.Integer, db.ForeignKey('humoer.id', ondelete='CASCADE'), nullable=False)
-    humoer = db.relationship('Humoer', backref=db.backref('sitater', lazy='dynamic' ))
+    # humoer_id = db.Column(db.Integer, db.ForeignKey('humoer.id', ondelete='CASCADE'), nullable=False)
+    # humoer = db.relationship('Humoer', backref=db.backref('sitater', lazy='dynamic' ))
 
     def __init__(self, sitat, barn_id, humoer_id, info):
         self.sitat = sitat
         self.barn_id = barn_id
-        self.humoer_id = humoer_id,
+        self.humoer_id = humoer_id
         self.info = info
 
 class Barn(db.Model):
@@ -52,7 +52,8 @@ class SitatSchema(ma.Schema):
     barn_id = fields.Integer(required=True)
     humoer_id = fields.Integer(required=True)
     sitat = fields.String(required=True)
-    creation_date= fields.LocalDateTime()
+    creation_date= fields.DateTime(dump_only = True, format = None)
+    info = fields.String(required=False, allow_none=True)
 
 class BarnSchema(ma.Schema):
     id = fields.Integer(dump_only = True)
