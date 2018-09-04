@@ -19,8 +19,8 @@
        </v-form>
     </v-container>
     <v-container grid-list-sm fill-height>
-      <v-layout row wrap reverse>
-        <v-flex xs12 v-for="i in data" >
+      <v-layout row wrap>
+        <v-flex xs12 sm4 md2 v-for="i in data" >
           <v-card :key="i.id">
             <v-card-title primary-title class="headline">
               {{ i.id }}

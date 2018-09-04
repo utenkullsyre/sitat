@@ -2,15 +2,16 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import vuex from 'vuex'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
-import Moment from 'moment'
 
 
 Vue.config.productionTip = false
 
 Vue.use(Vuetify)
+Vue.use(vuex)
 Vue.use(require('vue-moment'));
 
 new Vue({
