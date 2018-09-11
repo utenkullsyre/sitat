@@ -26,8 +26,13 @@ class SitatResource(Resource):
         if sitat:
             return {'message': 'Sitat eksisterer allerede'}, 400
 
-        sitat = Sitat(data['sitat'], data['barn_id'], data['humoer_id'], data['info'] if 'info' in data else None)
-
+        sitat = Sitat(
+            data['sitat'],
+            data['barn_id'],
+            data['humoer_id'],
+            data['info'] if 'info' in data else None,
+            data['creation_date'] if 'creation_date' in data else None
+            )
 
         db.session.add(sitat)
         # return str(sitat.__dict__)
@@ -54,7 +59,6 @@ class SitatResource(Resource):
         result = sitat_schema.dump(sitat).data
 
         return { "status": 'success', 'data': result }, 204
-
 
     def delete(self):
         json_data = request.get_json(force=True)

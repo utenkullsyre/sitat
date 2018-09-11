@@ -65,23 +65,7 @@
                    <v-icon class="pa-0 ma-0">event</v-icon>
                    <span class="subheading px-2" style="text-transform: none !important">Velg dato</span>
                  </v-btn>
-
-
-
-               <!-- <v-checkbox
-
-                 label="Velg dato"
-                 v-model="date"
-                 value="value"
-                 readonly></v-checkbox> -->
-                 <!-- <v-text-field
-                   slot="activator"
-                   v-model="date"
-                   label="Picker without buttons"
-                   prepend-icon="event"
-                   readonly
-                 ></v-text-field> -->
-                 <v-date-picker xs12 v-model="date" @input="$refs.meny.save(date)"></v-date-picker>
+                 <v-date-picker xs12 v-model="dato" @input="$refs.meny.save(date)"></v-date-picker>
                </v-menu>
              </v-flex>
              <v-card tile flat fluid v-if="date">
@@ -115,7 +99,7 @@ export default {
       beskrivelse: null,
       humoer_id: null,
       barn_id: 1,
-      date: null,
+      dato: null,
       humoer: null,
       lokaliser: false,
       meny: false,
@@ -137,7 +121,8 @@ export default {
             "sitat": this.sitat,
             "barn_id": this.barn_id,
             "humoer_id": this.humoer_id,
-            "info": this.beskrivelse ? this.beskrivelse : null
+            "info": this.beskrivelse ? this.beskrivelse : null,
+            "creation_date": this.dato ? this.dato : null
           })
           .then((response) => {
             console.log(response, "dette er response")

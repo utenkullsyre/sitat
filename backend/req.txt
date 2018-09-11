@@ -8,3 +8,4 @@ flask_cors
 psycopg2
 marshmallow_sqlalchemy
 requests
+Flask-JWT-Extended
